@@ -1,38 +1,32 @@
-import Alert from "./components/Alert";
-import Row from "./components/Row";
-import { useState } from "react";
+import React, { useState } from "react";
+import { ImportFromCsv, ExportToCsv, exportToCsv } from "./components/Csv"; // Assuming the file name is CsvComponents.tsx
 
-function App() {
-  // const [rows, setRows] = const [rows, setRows] = useState<number[]>([]);
-  const [rows, setRows] = useState<{ id: number }[]>([]);
+const App: React.FC = () => {
+  // State to hold the CSV data
+  const [csvData, setCsvData] = useState<Array<Array<string | number>>>([]);
 
-  const addRow = () => {
-    setRows((prevRows) => [...prevRows, { id: prevRows.length }]);
+  // Function to handle importing CSV data
+  const handleImport = (rows: Array<Array<string | number>>) => {
+    setCsvData(rows);
   };
 
-  const deleteRow = (id: number) => {
-    setRows((prevRows) => prevRows.filter((row) => row.id !== id));
+  // Function to trigger CSV export
+  const handleExportClick = () => {
+    exportToCsv("exportedData.csv", csvData);
   };
 
   return (
-    <div className="container my-5">
-      <div className="mb-3">
-        <button className="btn btn-primary" onClick={addRow}>
-          Add Row
-        </button>
+    <div className="container">
+      <h1>CSV Import/Export Example</h1>
+      <ImportFromCsv onImport={handleImport} />
+      <ExportToCsv filename="exportedData.csv" onClick={handleExportClick} />
+      {/* Optionally, display the imported CSV data here */}
+      <div>
+        <h2>Imported Data:</h2>
+        <pre>{JSON.stringify(csvData, null, 2)}</pre>
       </div>
-      <div className="row g-2 mb-2 fw-bold">
-        <div className="col">Token</div>
-        <div className="col">Supply</div>
-        <div className="col">Price</div>
-        <div className="col">Market Cap</div>
-        <div className="col-auto">Actions</div>
-      </div>
-      {rows.map((row, index) => (
-        <Row key={row.id} id={row.id} onDelete={deleteRow} />
-      ))}
     </div>
   );
-}
+};
 
 export default App;
