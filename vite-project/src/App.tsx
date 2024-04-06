@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { ImportFromCsv, ExportToCsv, exportToCsv } from "./components/Csv"; // Assuming the file name is CsvComponents.tsx
+import Row from "./components/Row";
+import Rows from "./components/Rows";
 
 const App: React.FC = () => {
   // State to hold the CSV data
@@ -17,13 +19,9 @@ const App: React.FC = () => {
 
   return (
     <div className="container">
-      <h1>CSV Import/Export Example</h1>
-      <ImportFromCsv onImport={handleImport} />
-      <ExportToCsv filename="exportedData.csv" onClick={handleExportClick} />
-      {/* Optionally, display the imported CSV data here */}
+      <h1>Token market cap</h1>
       <div>
-        <h2>Imported Data:</h2>
-        <pre>{JSON.stringify(csvData, null, 2)}</pre>
+        <Rows />
       </div>
     </div>
   );

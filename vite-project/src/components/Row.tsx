@@ -4,18 +4,31 @@ import { useState } from "react";
 
 interface Props {
   id: number;
+
+  token?: string;
+  price?: string;
+  supply?: string;
   onDelete: (id: number) => void;
+  onUpdate: (id: number, token: string, price: string, supply: string) => void; // Add this line
 }
 
-const Row = ({ id, onDelete }: Props) => {
-  const [token, setToken] = useState("");
-  const [price, setPrice] = useState("");
-  const [supply, setSupply] = useState("");
+const Row = ({
+  id,
+  token = "",
+  price = "",
+  supply = "",
+  onDelete,
+  onUpdate,
+}: Props) => {
+  // Initialize state with props
+  const [tokenState, setToken] = useState(token);
+  const [priceState, setPrice] = useState(price);
+  const [supplyState, setSupply] = useState(supply);
   const [marketCap, setMarketCap] = useState("");
 
   const calculateMarketCap = () => {
-    const p = parseFloat(price);
-    const s = parseFloat(supply);
+    const p = parseFloat(priceState);
+    const s = parseFloat(supplyState);
     if (!isNaN(p) && !isNaN(s)) {
       setMarketCap((p * s).toString());
     } else {
@@ -25,18 +38,34 @@ const Row = ({ id, onDelete }: Props) => {
 
   React.useEffect(() => {
     calculateMarketCap();
-  }, [price, supply]);
+  }, [priceState, supplyState]);
+
+  React.useEffect(() => {
+    onUpdate(id, tokenState, priceState, supplyState); // Propagate data changes back to parent
+  }, [tokenState, priceState, supplyState]);
 
   return (
     <div className="row g-2 align-items-center">
       <div className="col">
-        <Input placeholder="Input A" value={token} onValueChange={setToken} />
+        <Input
+          placeholder="token"
+          value={tokenState}
+          onValueChange={setToken}
+        />
       </div>
       <div className="col">
-        <Input placeholder="price" value={price} onValueChange={setPrice} />
+        <Input
+          placeholder="price"
+          value={priceState}
+          onValueChange={setPrice}
+        />
       </div>
       <div className="col">
-        <Input placeholder="supply" value={supply} onValueChange={setSupply} />
+        <Input
+          placeholder="supply"
+          value={supplyState}
+          onValueChange={setSupply}
+        />
       </div>
       <div className="col">
         <input
